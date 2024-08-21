@@ -28,6 +28,12 @@ async function run() {
 
     const artStoreCollection = client.db('artDB').collection('arts')
 
+    app.get('/items', async(req, res)=>{
+      const cursor = artStoreCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+
     app.post('/items',async(req,res)=>{
       const newItem = req.body;
       const result = await artStoreCollection.insertOne(newItem)
