@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -34,9 +34,34 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/items/:id', async(req, res)=>{
+      const id = req.params.id;
+      // console.log(id)
+      const query = {_id: new ObjectId(id)};
+      // console.log(typeof query._id)
+      const result = await artStoreCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.get('/user/:email', async(req, res)=>{
+      const email = req.params.email;
+      // console.log(typeof req.params.email)
+      const query = { mail: email}
+      const result = await artStoreCollection.find(query).toArray()
+      res.send(result)
+    })
+
     app.post('/items',async(req,res)=>{
       const newItem = req.body;
-      const result = await artStoreCollection.insertOne(newItem)
+      // console.log(newItem)
+      const result = await artStoreCollection.insertOne(newItem);
+      res.send(result);
+    })
+
+    app.delete('/items/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id)};
+      const result = await artStoreCollection.deleteOne(query);
       res.send(result)
     })
 
