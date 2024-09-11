@@ -58,6 +58,32 @@ async function run() {
       res.send(result);
     })
 
+    app.put('/items/:id', async(req, res)=>{
+      console.log(req.params.id);
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = { upsert: true };
+      const updatedItem = req.body;
+      // console.log(updatedItem);
+      const Item = {
+        $set: {
+          itemName: updatedItem.itemName ,
+          subCategory: updatedItem.subCategory, 
+          itemPrice: updatedItem.itemPrice, 
+          description: updatedItem.description, 
+          imageUrl: updatedItem.imageUrl, 
+          rate: updatedItem.rate, 
+          custom:updatedItem.custom, 
+          processTime: updatedItem.processTime, 
+          stockInfo: updatedItem.stockInfo, 
+          mail: updatedItem.mail, 
+          name: updatedItem.name
+        }
+      }
+      const result = await artStoreCollection.updateOne(filter,Item, options)
+      res.send(result)
+    })
+
     app.delete('/items/:id', async(req, res)=>{
       const id = req.params.id;
       const query = { _id: new ObjectId(id)};
